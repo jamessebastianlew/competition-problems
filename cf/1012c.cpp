@@ -33,10 +33,18 @@ int bdp[mxm][mxm][mxm]; // stands for bad dp
 int n;
 int aa[mxn];
 
-int C(int i) {
+int C(int i, int l, int r) {
     int cost = 0;
-    if(i-1 >= 0 && aa[i-1] >= aa[i]) cost += aa[i-1] - (aa[i]-1);
-    if(i+1 < n && aa[i+1] >= aa[i]) cost += aa[i+1] - (aa[i]-1);
+    if(i-1 >= 0) {
+        int left = aa[i-1];
+        if(l == i-1 && i-2 >= 0) left = min(aa[i-1], aa[i-2]-1);
+        if(left >= aa[i]) cost += left - (aa[i]-1);
+    }
+    if(i+1 < n) {
+        int right = aa[i+1];
+        if(r == i+1 && i+2 < n) right = min(right, aa[i+2]-1);
+        if(right >= aa[i]) cost += right - (aa[i]-1);
+    }
     return cost;
 }
 
@@ -46,8 +54,6 @@ int main() {
     cio();
     cin >> n;
     for(int i=0; i<n; ++i) cin >> aa[i];
-    for(int i=0; i<n; ++i) cc[i] = C(i);
-    cout << endl;
     /*
     simple O(n^5) algorithm
     dp[mxn][mxn][mxn];
@@ -73,7 +79,7 @@ int main() {
     for(int r=l; r<=n+1; ++r) {
         if(k==0) bdp[l][r][k] = 0;
         else for(int i=l+1; i<r; ++i) for(int z=0; z<=k-1; ++z)
-            amin(bdp[l][r][k], cc[i-1] + bdp[l][i-1][z] + bdp[i+1][r][k-1-z]);
+            amin(bdp[l][r][k], C(i-1, l-1, r-1) + bdp[l][i-1][z] + bdp[i+1][r][k-1-z]);
     }
     for(int k=1; k<=(n+1)>>1; ++k) cout << bdp[0][n+1][k] << ' ';
     cout << endl;
