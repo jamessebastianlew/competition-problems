@@ -83,6 +83,16 @@ int main() {
     }
     for(int k=1; k<=(n+1)>>1; ++k) cout << bdp[0][n+1][k] << ' ';
     cout << endl;
+    
+    // IMPROVING THE SOLUTION
+    /* 
+    O(n^2) solution
 
+    for(int k=0; k<=ceil(n/2); ++k) {
+        for(int r=0; r<n; ++r) {
+            dp[r][k] = min (C(i) + dp[r-2][k-1]) and (dp[r-1][k]) remembering the cost will be reduced if r-2 was picked
+        }
+    }
+    */
     return 0;
 }
